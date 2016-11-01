@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "920827126164",
+    "firebase_url": "https://stockhawk-ebad4.firebaseio.com",
+    "project_id": "stockhawk-ebad4",
+    "storage_bucket": "stockhawk-ebad4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:920827126164:android:143ba334c8f86887",
+        "android_client_info": {
+          "package_name": "com.sam_chordas.android.stockhawk"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "920827126164-gomhe6eh7kooeha5d7ufo63qnj6r54on.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD06HqlAIYg8B8bZUTUOvwl-iYy3Nsj3FY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
