@@ -10,6 +10,7 @@
       android:id="@+id/recycler_view"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
+      android:contentDescription="@string/desc_quotes_list"
       />
 
   <com.melnykov.fab.FloatingActionButton
@@ -26,5 +27,6 @@
       fab:fab_type="normal"
       fab:layout_anchor="recycler_view"
       fab:layout_anchorGravity="bottom | end"
+      android:contentDescription="@string/desc_add_quote_button"
       />
 </FrameLayout>

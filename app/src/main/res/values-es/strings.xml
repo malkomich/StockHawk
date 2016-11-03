@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="http://schemas.android.com/tools">
+  <string name="action_change_units">Cambiar unidades</string>
+  <string name="action_settings">Ajustes</string>
+  <string name="content_test">Buscar símbolo de valor de bolsa</string>
+  <string name="desc_add_quote_button">Añadir nuevo valor de bolsa</string>
+  <string name="desc_bid_price">El precio es de <xliff:g id="bidPrice">%s</xliff:g> €</string>
+  <string name="desc_change">El cambio de precio es de <xliff:g id="change">%s</xliff:g> €</string>
+  <string name="desc_percent_change">El porcentaje de cambio es <xliff:g id="change">%s</xliff:g></string>
+  <string name="desc_quotes_list">Lista de valores</string>
+  <string name="input_hint">Símbolo del valor de bolsa</string>
+  <string name="network_toast">Ouch! La aplicación requiere de conexión a internet</string>
+  <string name="symbol_search">Búsqueda de símbolos de valores</string>
+</resources>
