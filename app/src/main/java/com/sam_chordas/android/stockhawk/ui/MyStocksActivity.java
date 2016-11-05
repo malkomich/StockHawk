@@ -245,6 +245,11 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
             .show();
         }
         break;
+      case MessageEvent.STOCK_ADDED:
+        Snackbar.make(findViewById(R.id.recycler_view), getString(R.string.stock_added, event.getReference()),
+            Snackbar.LENGTH_SHORT)
+          .show();
+        break;
     }
   }
 

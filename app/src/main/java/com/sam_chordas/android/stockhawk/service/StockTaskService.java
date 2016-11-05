@@ -66,6 +66,7 @@ public class StockTaskService extends GcmTaskService{
     } catch (UnsupportedEncodingException e) {
       e.printStackTrace();
     }
+    String paramSymbol = params.getExtras().getString("symbol");
     if (params.getTag().equals("init") || params.getTag().equals("periodic")){
       isUpdate = true;
       initQueryCursor = mContext.getContentResolver().query(QuoteProvider.Quotes.CONTENT_URI,
@@ -97,7 +98,7 @@ public class StockTaskService extends GcmTaskService{
     } else if (params.getTag().equals("add")){
       isUpdate = false;
       // get symbol from params.getExtra and build query
-      String stockInput = params.getExtras().getString("symbol");
+      String stockInput = paramSymbol;
       try {
         urlStringBuilder.append(URLEncoder.encode("\""+stockInput+"\")", "UTF-8"));
       } catch (UnsupportedEncodingException e){
@@ -128,9 +129,11 @@ public class StockTaskService extends GcmTaskService{
           int searchResultsSize = mContext.getContentResolver()
               .applyBatch(QuoteProvider.AUTHORITY, Utils.quoteJsonToContentVals(getResponse))
               .length;
-          if(searchResultsSize == 0 && params.getTag().equals("add")) {
-            EventBus.getDefault()
-                .post(new MessageEvent(MessageEvent.STOCK_NOT_FOUND, params.getExtras().getString("symbol")));
+          if(params.getTag().equals("add")) {
+            MessageEvent event = searchResultsSize == 0 ?
+                new MessageEvent(MessageEvent.STOCK_NOT_FOUND, paramSymbol) :
+                new MessageEvent(MessageEvent.STOCK_ADDED, paramSymbol);
+            EventBus.getDefault().post(event);
           }
         }catch (RemoteException | OperationApplicationException e){
           Log.e(LOG_TAG, "Error applying batch insert", e);

@@ -7,11 +7,13 @@ public class MessageEvent {
 
   // Event types
   public static final int STOCK_NOT_FOUND = 0;
+  public static final int STOCK_ADDED = 1;
 
   private int type;
   private String reference;
 
   public MessageEvent(int type, String reference) {
+    this.type = type;
     this.reference = reference;
   }
 
