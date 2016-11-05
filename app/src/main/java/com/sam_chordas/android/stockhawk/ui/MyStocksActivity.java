@@ -8,7 +8,9 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
@@ -100,33 +102,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
     fab.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
         if (isConnected){
-          new MaterialDialog.Builder(mContext)
-              .title(R.string.symbol_search)
-              .content(R.string.content_test)
-              .inputType(InputType.TYPE_CLASS_TEXT)
-              .input(R.string.input_hint, R.string.input_prefill, new MaterialDialog.InputCallback() {
-                @Override public void onInput(MaterialDialog dialog, CharSequence input) {
-                  // On FAB click, receive user input. Make sure the stock doesn't already exist
-                  // in the DB and proceed accordingly
-                  Cursor c = getContentResolver().query(QuoteProvider.Quotes.CONTENT_URI,
-                      new String[] { QuoteColumns.SYMBOL }, QuoteColumns.SYMBOL + "= ?",
-                      new String[] { input.toString() }, null);
-                  if (c.getCount() != 0) {
-                    Toast toast =
-                        Toast.makeText(MyStocksActivity.this, "This stock is already saved!",
-                            Toast.LENGTH_LONG);
-                    toast.setGravity(Gravity.CENTER, Gravity.CENTER, 0);
-                    toast.show();
-                    return;
-                  } else {
-                    // Add the stock to DB
-                    mServiceIntent.putExtra("tag", "add");
-                    mServiceIntent.putExtra("symbol", input.toString());
-                    startService(mServiceIntent);
-                  }
-                }
-              })
-              .show();
+          showNewQuoteDialog(null);
         } else {
           networkToast();
         }
@@ -241,10 +217,66 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
 
   @Subscribe(threadMode = ThreadMode.MAIN)
   public void onMessageEvent(MessageEvent event) {
-    switch (event) {
-      case STOCK_NOT_FOUND:
-        // ToDo: Update refresh view to stop refreshing & show SnackBar with error status
+    switch (event.getType()) {
+      case MessageEvent.STOCK_NOT_FOUND:
+        final String stockQuoteSymbol = event.getReference();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+          Snackbar.make(findViewById(R.id.recycler_view), getString(R.string.stock_not_found, stockQuoteSymbol),
+              Snackbar.LENGTH_LONG)
+            .setActionTextColor(getColor(R.color.material_red_700))
+            .setAction(R.string.action_retry, new View.OnClickListener() {
+              @Override
+              public void onClick(View v) {
+                showNewQuoteDialog(stockQuoteSymbol);
+              }
+            })
+            .show();
+        } else {
+          Snackbar.make(findViewById(R.id.recycler_view), getString(R.string.stock_not_found, stockQuoteSymbol),
+              Snackbar.LENGTH_LONG)
+            .setActionTextColor(getResources().getColor(R.color.material_red_700))
+            .setAction(R.string.action_retry, new View.OnClickListener() {
+              @Override
+              public void onClick(View v) {
+                showNewQuoteDialog(stockQuoteSymbol);
+              }
+            })
+            .show();
+        }
         break;
     }
-  };
+  }
+
+  private void showNewQuoteDialog(String editText) {
+    String preFill = editText != null ? editText : getString(R.string.input_prefill);
+    new MaterialDialog.Builder(mContext)
+        .title(R.string.symbol_search)
+        .content(R.string.content_test)
+        .inputType(InputType.TYPE_CLASS_TEXT)
+        .input(getString(R.string.input_hint), preFill, new MaterialDialog.InputCallback() {
+          @Override public void onInput(MaterialDialog dialog, CharSequence input) {
+            // On FAB click, receive user input. Make sure the stock doesn't already exist
+            // in the DB and proceed accordingly
+            Cursor c = getContentResolver().query(QuoteProvider.Quotes.CONTENT_URI,
+                new String[] { QuoteColumns.SYMBOL }, QuoteColumns.SYMBOL + "= ?",
+                new String[] { input.toString() }, null);
+            if (c.getCount() != 0) {
+              Toast toast =
+                  Toast.makeText(MyStocksActivity.this, "This stock is already saved!",
+                      Toast.LENGTH_LONG);
+              toast.setGravity(Gravity.CENTER, Gravity.CENTER, 0);
+              toast.show();
+              return;
+            } else {
+              // Add the stock to DB
+              mServiceIntent.putExtra("tag", "add");
+              mServiceIntent.putExtra("symbol", input.toString());
+              startService(mServiceIntent);
+            }
+          }
+        })
+        .show();
+  }
+
 }

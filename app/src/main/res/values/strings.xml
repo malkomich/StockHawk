@@ -15,4 +15,6 @@
   <string name="desc_bid_price">The price is <xliff:g id="bidPrice">%s</xliff:g> $</string>
   <string name="desc_percent_change">The percent change is <xliff:g id="change">%s</xliff:g></string>
   <string name="desc_change">The change is <xliff:g id="change">%s</xliff:g> $</string>
+  <string name="stock_not_found">Stock \'<xliff:g id="symbol">%s</xliff:g>\' Not Found</string>
+  <string name="action_retry">Retry</string>
 </resources>
